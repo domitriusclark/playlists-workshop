@@ -1,10 +1,18 @@
 const resolvers = {
   Query: {
-    /*
-        We're going to want to add a way to query our current user
-    */
+    currentUser: (_, args, { prisma, user }) => {
+      if (!user) {
+        throw new Error("Not Authenticated! Please login/signup.");
+      }
+
+      return prisma.user({ id: user.id });
+    },
   },
   Mutation: {
+    // Playlist Mutations
+    createPlaylist: async () => { },
+    deletePlaylist: async () => { },
+    // Authentication Mutations
     register: async (_, args, { prisma }) => {
       const hashedPassword = await bcrypt.hash(args.password, 10);
 

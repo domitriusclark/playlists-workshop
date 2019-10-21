@@ -6,6 +6,9 @@ const typeDefs = gql`
   }
   
   type Mutation {
+	  ## Playlist Mutations
+    createPlaylist(): Playlist
+    deletePlaylist(): SuccessMessage
     ## User Mutations
     register(username: String!, password: String!, email: String!): User!
     login(username: String, email: String, password: String!): LoginResponse!

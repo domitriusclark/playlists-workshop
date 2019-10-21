@@ -1,1 +1,40 @@
-// We will need to setup our datamodel here. This datamodel will closely resemble our Apollo schema, with some very specific differences
+type Media {
+  id: ID! @id
+  title: String
+  year: String
+  rated: String
+  released: String
+  runtime: String
+  genre: String
+  director: String
+  writer: String
+  actors: String
+  plot: String
+  language: String
+  country: String
+  awards: String
+  poster: String
+  source: String
+  value: String
+  metascore: String
+  imdbRating: String
+  imdbVotes: String
+  imdbID: String
+  totalSeasons: String
+  response: String
+}
+
+type Playlist {
+  id: ID! @id
+  owner: User!
+  title: String! @unique
+  media: [Media]! @relation(link: INLINE)
+}
+
+type User {
+  id: ID! @id
+  email: String! @unique
+  password: String! @unique
+  username: String!
+  playlists: [Playlist]! @relation(link: INLINE)
+}

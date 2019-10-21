@@ -1,11 +1,25 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  ## We will need to create two custom types to handle the responses we want from 
-  ## a successful logout or login
-  type LoginResponse {}
+  type Query {
+    currentUser: User!
+  }
+  
+  type Mutation {
+    ## User Mutations
+    register(username: String!, password: String!, email: String!): User!
+    login(username: String, email: String, password: String!): LoginResponse!
+    logout: SuccessMessage
+  }
 
-  type SuccessMessage {}
+  type LoginResponse {
+    token: String
+    user: User
+  }
+
+  type SuccessMessage {
+    message: String
+  }
 
   type Media {
     id: ID!
@@ -46,12 +60,6 @@ const typeDefs = gql`
     email: String!
     password: String!
     playlists: [Playlist]
-  }
-
-  ## Here we will add our mutation type and define the mutation we will be using to invoke the resolvers we defined
-  type Mutation {
-    register(): User!
-    login(): LoginResponse
   }
 `;
 

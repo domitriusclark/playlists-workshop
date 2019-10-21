@@ -1,9 +1,13 @@
 import React from 'react';
+import LogoutButton from '../Auth/LogoutButton';
 
-// We will use this as our authenticated landing page
+const Landing = ({ currentUser }) => {
+  return (
+    <div>
+      <LogoutButton />
+      <p>Hello {currentUser.username}</p>
+    </div>
+  )
+}
 
-const Landing = () => {
-    return <p>Landing Page</p>
-};
-
-export default Landing
+export default Landing;

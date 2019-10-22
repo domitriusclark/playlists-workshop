@@ -20,6 +20,9 @@ const getUser = token => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  dataSources: () => ({
+    omdbAPI: new OmdbAPI()
+  }),
   context: async ({ req }) => {
     const tokenWithBearer = (await req.headers.authorization) || "";
     const token = tokenWithBearer.split(" ")[1];

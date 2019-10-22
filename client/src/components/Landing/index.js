@@ -12,11 +12,18 @@ const Playlists = ({ currentUser }) => {
 }
 
 const Landing = ({ currentUser }) => {
-  // We now need to create a way to track our input and feed the title to our RESTDataSource
-  // with some state and our two components <SearchMedia /> and <MediaCard />
+  const [search, setSearch] = React.useState("");
+  const [value, setValue] = React.useState("");
   return (
     <div>
       <LogoutButton />
+      <div>
+        <div>
+          <h1>SEARCH YOUR MEDIA</h1>
+          <SearchMedia value={value} setSearch={setSearch} setValue={setValue} />
+        </div>
+        {search && <MediaCard search={search} />}
+      </div>
       <Playlists currentUser={currentUser} />
     </div>
   )

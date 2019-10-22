@@ -10,79 +10,137 @@ const resolvers = {
   },
   Mutation: {
     // Media Mutations
-    createMedia: async () => { },
-    addMediaToPlaylist: async () => { },
-    // Playlist Mutations
-    createPlaylist: async (_, args, { prisma }) => {
-      const playlist = prisma.createPlaylist({
-        owner: {
-          connect: {
-            id: args.userId
+    createMedia: async (_, args, { prisma }) => {
+
+      const mediaExists = await prisma
+        .medias()
+        .then(data => data.find(media => media.title === args.mediaTitle));
+
+
+      if (mediaExists instanceof Object) {
+        return mediaExists;
+      }
+
+      const newMedia = prisma.createMedia({
+        ...args.media
+      });
+
+      return newMedia;
+    },
+    addMediaToPlaylist: async (_, args, { prisma, user }) => {
+      if (!user) {
+        throw new Error("Log in first!");
+      }
+
+      const mediaExistsInPlaylist = await prisma
+        .playlist({
+          title: args.playlistTitle
+        })
+        .media()
+        .then(data => data.some(media => media.title === args.mediaTitle));
+
+      if (mediaExistsInPlaylist) {
+        throw new Error("This media already exists in this playlist!");
+      }
+
+      return prisma.updatePlaylist({
+        data: {
+          media: {
+            connect: {
+              id: args.mediaId
+            }
           }
         },
-        title: args.title
-      });
-
-      return playlist;
-    },
-    deletePlaylist: async (_, args, { prisma }) => {
-      const deletePlaylist = await prisma.updateUser({
-        data: { playlists: { delete: { id: args.playlistId } } },
         where: {
+          title: args.playlistTitle
+        }
+      });
+    }
+  },
+
+  // Playlist Mutations
+  createPlaylist: async (_, args, { prisma }) => {
+    const playlist = prisma.createPlaylist({
+      owner: {
+        connect: {
           id: args.userId
         }
-      });
+      },
+      title: args.title
+    });
 
-      return deletePlaylist;
-    },
+    return playlist;
+  },
+  deletePlaylist: async (_, args, { prisma }) => {
+    const deletePlaylist = await prisma.updateUser({
+      data: { playlists: { delete: { id: args.playlistId } } },
+      where: {
+        id: args.userId
+      }
+    });
 
-    // Authentication Mutations
-    register: async (_, args, { prisma }) => {
-      const hashedPassword = await bcrypt.hash(args.password, 10);
+    return deletePlaylist;
+  },
 
-      const newUser = await prisma.createUser({
-        username: args.username,
-        email: args.email,
-        password: hashedPassword
-      });
+  // Authentication Mutations
+  register: async (_, args, { prisma }) => {
+    const hashedPassword = await bcrypt.hash(args.password, 10);
 
-      return newUser;
-    },
-    login: async (_, args, { prisma }) => {
-      const user = await prisma.user({
+    const newUser = await prisma.createUser({
+      username: args.username,
+      email: args.email,
+      password: hashedPassword
+    });
+
+    return newUser;
+  },
+  login: async (_, args, { prisma }) => {
+    const user = await prisma.user({
+      email: args.email
+    });
+
+    if (!user) {
+      throw new Error("Invalid Login");
+    }
+
+    const passwordMatch = await bcrypt.compare(args.password, user.password);
+
+    if (!passwordMatch) {
+      throw new Error("Invalid password");
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
         email: args.email
-      });
-
-      if (!user) {
-        throw new Error("Invalid Login");
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "30d"
       }
+    );
 
-      const passwordMatch = await bcrypt.compare(args.password, user.password);
-
-      if (!passwordMatch) {
-        throw new Error("Invalid password");
-      }
-
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: args.email
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "30d"
-        }
-      );
-
-      return {
-        token,
-        user
-      };
+    return {
+      token,
+      user
+    };
+  },
+  logout: (_, args, context) => {
+    return { message: "Logged out!" };
+  },
+  User: {
+    playlists: (parent, args, { prisma }) => {
+      return prisma.user({ id: parent.id }).playlists();
+    }
+  },
+  Playlist: {
+    owner: (parent, args, { prisma }) => {
+      return prisma.playlist({ id: parent.id }).owner();
     },
-    logout: (_, args, context) => {
-      return { message: "Logged out!" };
-    },
-  }
+    media: (parent, args, { prisma }) => {
+      return prisma.playlist({ id: parent.id }).media();
+    }
+  },
 }
 
 module.exports = resolvers;

@@ -1,13 +1,22 @@
-import React from 'react'
+import React from "react";
 
-// This component will be the input that we track to submit the title to the endpoint and query the omdb api
-
-const SearchMedia = () => {
+const SearchMedia = ({ setSearch, value, setValue }) => {
   return (
     <div>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          return setSearch(value);
+        }}
+      >
+        <div>
+          <input onChange={e => setValue(e.target.value)} />
+          <button>Search</button>
+        </div>
+      </form>
 
     </div>
-  )
-}
+  );
+};
 
-export default SearchMedia
+export default SearchMedia;

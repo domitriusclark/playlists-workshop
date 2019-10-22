@@ -16,6 +16,7 @@ const getUser = token => {
   }
 };
 
+// We will need to handle how our graphql server is fed the REST data
 const server = new ApolloServer({
   typeDefs,
   resolvers,

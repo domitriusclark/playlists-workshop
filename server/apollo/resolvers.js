@@ -9,9 +9,33 @@ const resolvers = {
     },
   },
   Mutation: {
+    // Media Mutations
+    createMedia: async () => { },
+    addMediaToPlaylist: async () => { },
     // Playlist Mutations
-    createPlaylist: async () => { },
-    deletePlaylist: async () => { },
+    createPlaylist: async (_, args, { prisma }) => {
+      const playlist = prisma.createPlaylist({
+        owner: {
+          connect: {
+            id: args.userId
+          }
+        },
+        title: args.title
+      });
+
+      return playlist;
+    },
+    deletePlaylist: async (_, args, { prisma }) => {
+      const deletePlaylist = await prisma.updateUser({
+        data: { playlists: { delete: { id: args.playlistId } } },
+        where: {
+          id: args.userId
+        }
+      });
+
+      return deletePlaylist;
+    },
+
     // Authentication Mutations
     register: async (_, args, { prisma }) => {
       const hashedPassword = await bcrypt.hash(args.password, 10);

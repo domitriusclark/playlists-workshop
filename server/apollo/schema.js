@@ -6,9 +6,11 @@ const typeDefs = gql`
   }
   
   type Mutation {
+    
 	  ## Playlist Mutations
-    createPlaylist(): Playlist
-    deletePlaylist(): SuccessMessage
+    createPlaylist(userId: ID!, media: MediaInput, title: String!): Playlist
+    deletePlaylist(playlistId: ID!, userId: ID!): SuccessMessage
+
     ## User Mutations
     register(username: String!, password: String!, email: String!): User!
     login(username: String, email: String, password: String!): LoginResponse!

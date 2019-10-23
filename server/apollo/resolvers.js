@@ -1,3 +1,6 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 const resolvers = {
   Query: {
     currentUser: (_, args, { prisma, user }) => {
@@ -10,8 +13,8 @@ const resolvers = {
   },
   Mutation: {
     // Playlist Mutations
-    createPlaylist: async () => { },
-    deletePlaylist: async () => { },
+    // createPlaylist: async () => { },
+    // deletePlaylist: async () => { },
     // Authentication Mutations
     register: async (_, args, { prisma }) => {
       const hashedPassword = await bcrypt.hash(args.password, 10);

@@ -13,7 +13,6 @@ const Routes = () => {
   return (
     <Router>
       <Switch>
-        // then we hook into the data to pass the currentUser and it's data through 
         {data && data.currentUser ? (
           <Route
             exact

@@ -9,7 +9,6 @@ const Landing = ({ currentUser }) => {
   return (
     <div>
       <LogoutButton />
-      <Playlists currentUser={currentUser} />
     </div>
   )
 }

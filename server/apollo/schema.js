@@ -1,20 +1,6 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  type Query {
-    currentUser: User!
-  }
-  
-  type Mutation {
-	  ## Playlist Mutations
-    createPlaylist(): Playlist
-    deletePlaylist(): SuccessMessage
-    ## User Mutations
-    register(username: String!, password: String!, email: String!): User!
-    login(username: String, email: String, password: String!): LoginResponse!
-    logout: SuccessMessage
-  }
-
   type LoginResponse {
     token: String
     user: User
@@ -64,6 +50,20 @@ const typeDefs = gql`
     password: String!
     playlists: [Playlist]
   }
+
+  type Query {
+    currentUser: User!
+  }
+  
+  type Mutation {
+	  ## Playlist Mutations
+    # createPlaylist(): Playlist
+    # deletePlaylist(): SuccessMessage
+    ## User Mutations
+    register(username: String!, password: String!, email: String!): User!
+    login(username: String, email: String, password: String!): LoginResponse!
+    logout: SuccessMessage
+  }
 `;
 
-module.export = typeDefs;
+module.exports = typeDefs;

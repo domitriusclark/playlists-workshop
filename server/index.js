@@ -2,6 +2,7 @@ require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
 const typeDefs = require("./apollo/schema");
 const resolvers = require("./apollo/resolvers");
+const { prisma } = require("./prisma/generated/prisma-client");
 
 const jwt = require("jsonwebtoken");
 

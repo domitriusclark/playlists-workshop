@@ -1,9 +1,10 @@
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const { ApolloServer } = require("apollo-server");
 const typeDefs = require("./apollo/schema");
 const resolvers = require("./apollo/resolvers");
-
-const jwt = require("jsonwebtoken");
+const { prisma } = require("./prisma/generated/prisma-client");
+const OmdbAPI = require("./apollo/datasources/omdb");
 
 const getUser = token => {
   try {
@@ -16,7 +17,6 @@ const getUser = token => {
   }
 };
 
-// We will need to handle how our graphql server is fed the REST data
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -30,7 +30,7 @@ const server = new ApolloServer({
 
     return {
       user,
-      prisma
+      prisma // the generated prisma client if you are using it
     };
   }
 });

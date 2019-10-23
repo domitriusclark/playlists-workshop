@@ -9,6 +9,10 @@ import resolvers from './apollo/resolvers';
 
 import App from './App';
 
+const httpLink = new HttpLink({
+  uri: "http://localhost:4000"
+});
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("Authorization");
   return {

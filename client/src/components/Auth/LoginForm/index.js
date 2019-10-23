@@ -14,16 +14,18 @@ export const LOGIN = gql`
   }
 `;
 
+
+export const saveToken = token => {
+  localStorage.setItem("Authorization", token);
+  return window.location.reload();
+};
+
 const LoginForm = () => {
   const [loginValues, setLoginValues] = React.useState({
     email: "",
     password: ""
   });
 
-  export const saveToken = token => {
-    localStorage.setItem("Authorization", token);
-    return window.location.reload();
-  };
 
   const [login] = useMutation(LOGIN, {
     onCompleted: data => {
@@ -57,5 +59,6 @@ const LoginForm = () => {
     </form>
   );
 };
+
 
 export default LoginForm;

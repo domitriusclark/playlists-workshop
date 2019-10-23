@@ -65,7 +65,7 @@ const RegistrationForm = () => {
         }
         placeholder="password"
       />
-      <button>Finish</button>
+      <button>Sign Up</button>
     </form>
   );
 };

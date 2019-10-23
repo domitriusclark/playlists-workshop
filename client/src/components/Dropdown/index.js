@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 
 import gql from "graphql-tag";
 import CURRENT_USER from "../Auth/CurrentUser";
@@ -33,11 +33,11 @@ const ADD_MEDIA_TO_PLAYLIST = gql`
 `;
 
 const Dropdown = ({ mediaData }) => {
+  const { data: userData } = useQuery(CURRENT_USER);
+
   const defaultDropdownValue = userData.currentUser.playlists.length > 0 ? userData.currentUser.playlists[0].title : "";
 
   const [dropdownValue, setDropDownValue] = React.useState(defaultDropdownValue);
-
-  const { data: userData } = useQuery(CURRENT_USER);
 
   const [addMediaToPlaylist] = useMutation(ADD_MEDIA_TO_PLAYLIST, {
     refetchQueries: () => [{ query: CURRENT_USER, variables: {} }]

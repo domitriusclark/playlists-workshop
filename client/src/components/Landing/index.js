@@ -3,6 +3,7 @@ import LogoutButton from '../Auth/LogoutButton';
 import Playlist from '../Playlist';
 import SearchMedia from '../SearchMedia';
 import MediaCard from '../MediaCard';
+import PlaylistForm from '../PlaylistForm';
 
 const Playlists = ({ currentUser }) => {
   return currentUser ?
@@ -24,6 +25,7 @@ const Landing = ({ currentUser }) => {
         </div>
         {search && <MediaCard search={search} />}
       </div>
+      <PlaylistForm />
       <Playlists currentUser={currentUser} />
     </div>
   )

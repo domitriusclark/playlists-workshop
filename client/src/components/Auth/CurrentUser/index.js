@@ -11,6 +11,7 @@ const CURRENT_USER = gql`
         media {
           title
           imdbRating
+          id
         }
       }
     }

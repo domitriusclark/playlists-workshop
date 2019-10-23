@@ -20,6 +20,9 @@ const Playlist = ({ playlist, userId }) => {
   return (
     <div>
       <h1>{playlist.title}</h1>
+      <ul>
+        {playlist.media.map(m => <li key={m.id}>{m.title}</li>)}
+      </ul>
       <button
         onClick={() =>
           deletePlaylist({
@@ -35,5 +38,7 @@ const Playlist = ({ playlist, userId }) => {
     </div>
   );
 };
+
+
 
 export default Playlist;

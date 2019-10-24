@@ -1,22 +1,6 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-  type Query {
-    currentUser: User!
-  }
-  
-  type Mutation {
-    
-	  ## Playlist Mutations
-    createPlaylist(userId: ID!, media: MediaInput, title: String!): Playlist
-    deletePlaylist(playlistId: ID!, userId: ID!): SuccessMessage
-
-    ## User Mutations
-    register(username: String!, password: String!, email: String!): User!
-    login(username: String, email: String, password: String!): LoginResponse!
-    logout: SuccessMessage
-  }
-
   type LoginResponse {
     token: String
     user: User
@@ -24,6 +8,32 @@ const typeDefs = gql`
 
   type SuccessMessage {
     message: String
+  }
+
+  input MediaInput {
+    id: ID!
+    title: String
+    year: String
+    rated: String
+    released: String
+    runtime: String
+    genre: String
+    director: String
+    writer: String
+    actors: String
+    plot: String
+    language: String
+    country: String
+    awards: String
+    poster: String
+    source: String
+    value: String
+    metascore: String
+    imdbRating: String
+    imdbVotes: String
+    imdbID: String
+    totalSeasons: String
+    response: String
   }
 
   type Media {
@@ -66,6 +76,22 @@ const typeDefs = gql`
     password: String!
     playlists: [Playlist]
   }
+
+  type Query {
+    currentUser: User!
+  }
+  
+  type Mutation {
+    
+	  ## Playlist Mutations
+    createPlaylist(userId: ID!, media: MediaInput, title: String!): Playlist
+    deletePlaylist(playlistId: ID!, userId: ID!): SuccessMessage
+
+    ## User Mutations
+    register(username: String!, password: String!, email: String!): User!
+    login(username: String, email: String, password: String!): LoginResponse!
+    logout: SuccessMessage
+  }
 `;
 
-module.export = typeDefs;
+module.exports = typeDefs;

@@ -1,3 +1,6 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 const resolvers = {
   Query: {
     currentUser: (_, args, { prisma, user }) => {
@@ -6,40 +9,12 @@ const resolvers = {
       }
 
       return prisma.user({ id: user.id });
-    },
+    }
   },
   Mutation: {
-    // Media Mutations
-    createMedia: async () => { },
-    addMediaToPlaylist: async () => { },
-    // Playlist Mutations
-    createPlaylist: async (_, args, { prisma }) => {
-      const playlist = prisma.createPlaylist({
-        owner: {
-          connect: {
-            id: args.userId
-          }
-        },
-        title: args.title
-      });
-
-      return playlist;
-    },
-    deletePlaylist: async (_, args, { prisma }) => {
-      const deletePlaylist = await prisma.updateUser({
-        data: { playlists: { delete: { id: args.playlistId } } },
-        where: {
-          id: args.userId
-        }
-      });
-
-      return deletePlaylist;
-    },
-
-    // Authentication Mutations
+    // User mutations
     register: async (_, args, { prisma }) => {
       const hashedPassword = await bcrypt.hash(args.password, 10);
-
       const newUser = await prisma.createUser({
         username: args.username,
         email: args.email,
@@ -82,7 +57,46 @@ const resolvers = {
     logout: (_, args, context) => {
       return { message: "Logged out!" };
     },
+
+    // Playlist mutations
+    createPlaylist: async (_, args, { prisma }) => {
+      const playlist = prisma.createPlaylist({
+        owner: {
+          connect: {
+            id: args.userId
+          }
+        },
+        title: args.title
+      });
+
+      return playlist;
+    },
+    deletePlaylist: async (_, args, { prisma }) => {
+      const deletePlaylist = await prisma.updateUser({
+        data: { playlists: { delete: { id: args.playlistId } } },
+        where: {
+          id: args.userId
+        }
+      });
+
+      return deletePlaylist;
+    }
+  },
+
+  // Type resolvers for relationships
+  User: {
+    playlists: (parent, args, { prisma }) => {
+      return prisma.user({ id: parent.id }).playlists();
+    }
+  },
+  Playlist: {
+    owner: (parent, args, { prisma }) => {
+      return prisma.playlist({ id: parent.id }).owner();
+    },
+    media: (parent, args, { prisma }) => {
+      return prisma.playlist({ id: parent.id }).media();
+    }
   }
-}
+};
 
 module.exports = resolvers;
